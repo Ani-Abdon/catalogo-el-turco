@@ -3154,7 +3154,7 @@ function lineas(){
   const vendedor=VENDEDORES[document.getElementById('vendedor').value];
   const obs=(document.getElementById('obs').value||'').trim();
   const fecha=new Date().toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'});
-  const filas=pedido.map(p=>String(p.cantidad||'')+' | '+String(p.codigo||'')+' | '+descripcionPedido(p)).join('\n');
+  const filas=pedido.map(p=>'*'+String(p.cantidad||'')+'* | *'+String(p.codigo||'')+'* | '+descripcionPedido(p)).join('\n');
   return 'Nuevo pedido - Distribuidora El Turco\n\n'+
     'Cliente: '+cliente+'\n'+
     'Contacto: '+contacto+'\n'+
