@@ -3178,6 +3178,11 @@ function enviarPedido(){
   const vendedor=VENDEDORES[vendedorSelect.value];
   const whatsappUrl='https://wa.me/'+vendedor.telefono+'?text='+encodeURIComponent(lineas());
   const win=window.open(whatsappUrl,'_blank');
+  pedido=[];
+  ['cliente','contacto','obs'].forEach(id=>{document.getElementById(id).value='';});
+  guardarPedido();
+  renderCarrito();
+  renderProductos();
   if(!win || win.closed || typeof win.closed==='undefined') window.location.href=whatsappUrl;
 }
 
@@ -3368,5 +3373,3 @@ mostrarCantidadFotos();
 </script>
 </body>
 </html>
-
-
