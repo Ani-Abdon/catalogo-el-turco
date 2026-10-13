@@ -198,6 +198,31 @@ body{background:#f6f8fb}
 .pp-table td:last-child{min-width:122px}
 .pp-table .stepper{min-width:114px;flex-wrap:nowrap}
 .pp-table .stepper button,.pp-table .stepper input{flex-shrink:0}
+
+/* Responsive product details: reserve a full row for the description. */
+.pp-families{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))!important}
+.pp-family.content-expanded{grid-column:auto!important}
+.pp-detail{overflow-x:visible!important}
+.pp-table,.pp-table tbody{display:block;width:100%!important}
+.pp-table tr{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:10px;margin:6px 0;border-radius:10px}
+.pp-table td{display:block;min-width:0!important;padding:0!important;text-align:left!important}
+.pp-table td:nth-child(2){grid-column:1/-1;grid-row:1;overflow-wrap:break-word;word-break:normal;line-height:1.4}
+.pp-table td:first-child{grid-column:1;grid-row:2;align-self:center}
+.pp-table td:last-child{grid-column:2;grid-row:2;align-self:center}
+.pp-table .stepper{gap:6px;min-width:0;justify-content:flex-end!important}
+.pp-table .stepper button{width:30px!important;height:30px!important}
+.pp-table .stepper input{width:48px!important;height:30px!important}
+.pp-table .price-tag{white-space:normal;overflow-wrap:break-word}
+.top{grid-template-columns:auto minmax(0,1fr) minmax(240px,340px)}
+.brand{font-size:clamp(22px,2.4vw,31px)}
+.search,.search input{min-width:0}
+@media(max-width:1050px){
+ .layout{grid-template-columns:1fr}
+ .top{grid-template-columns:auto minmax(0,1fr)}
+ .brand{font-size:24px}
+ .search{grid-column:1/-1;max-width:none}
+ .pp-families{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))!important}
+}
 </style>
 </head>
 <body>
@@ -1788,6 +1813,18 @@ for(let i=productos.length-1;i>=0;i--){if(['305','326','327'].includes(productos
 for(let i=productos.length-1;i>=0;i--){if(productos[i].codigo==='752')productos.splice(i,1);}
 for(let i=productos.length-1;i>=0;i--){if(['072','861','862'].includes(productos[i].codigo))productos.splice(i,1);}
 for(let i=productos.length-1;i>=0;i--){if(['637','638','639','640','641','642','674'].includes(productos[i].codigo))productos.splice(i,1);}
+productos.push({"codigo": "104", "descripcion": "BROCHE PARA TELA MEDIA SOMBRA DE 7,5 cm", "categoria": "Artículos de jardin", "subcategoria": "Broches para tela media sombra", "medida": "7,5 cm", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101500, "foto": "imagenes/jardin/broche-media-sombra-104.png"});
+Object.assign(PRECIOS_CATALOGO,{"104":78.82});
+productos.push(...[{"codigo": "AB01", "descripcion": "ABRAZADERA ZINCADA 10–16 mm", "categoria": "Sigas", "subcategoria": "Abrazaderas zincadas", "medida": "10–16 mm", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101501, "foto": "imagenes/sigas/abrazaderas-zincadas.png"}, {"codigo": "AB02", "descripcion": "ABRAZADERA ZINCADA 12–20 mm", "categoria": "Sigas", "subcategoria": "Abrazaderas zincadas", "medida": "12–20 mm", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101502, "foto": "imagenes/sigas/abrazaderas-zincadas.png"}]);
+Object.assign(PRECIOS_CATALOGO,{"AB01":439.94,"AB02":495.53});
+productos.push(...[{"codigo": "609", "descripcion": "TORNILLO CON ARANDELA PLÁSTICA", "categoria": "Tornillos", "subcategoria": "Tornillos para inodoros y bidets Malvar", "medida": "22 × 60", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101503, "foto": ""}, {"codigo": "610", "descripcion": "TORNILLO CON ARANDELA PLÁSTICA", "categoria": "Tornillos", "subcategoria": "Tornillos para inodoros y bidets Malvar", "medida": "22 × 70", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101504, "foto": ""}, {"codigo": "611", "descripcion": "TORNILLO CON ARANDELA PLÁSTICA", "categoria": "Tornillos", "subcategoria": "Tornillos para inodoros y bidets Malvar", "medida": "22 × 80", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101505, "foto": ""}, {"codigo": "612", "descripcion": "TORNILLO NIQUELADO PARA SOPAPA", "categoria": "Tornillos", "subcategoria": "Tornillos de bronce Malvar", "medida": "3/16\" × 3\"", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101506, "foto": ""}, {"codigo": "613", "descripcion": "TORNILLO DE BRONCE PARA SOPAPA", "categoria": "Tornillos", "subcategoria": "Tornillos de bronce Malvar", "medida": "3/16\" × 3\"", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101507, "foto": ""}, {"codigo": "614", "descripcion": "TORNILLO PARA TAPA DE CÁMARA DE BRONCE PULIDO", "categoria": "Tornillos", "subcategoria": "Tornillos de bronce Malvar", "medida": "", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101508, "foto": ""}, {"codigo": "615", "descripcion": "TORNILLO DE BRONCE PARA CÁMARA SIN TUERCA", "categoria": "Tornillos", "subcategoria": "Tornillos de bronce Malvar", "medida": "", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101509, "foto": ""}]);
+Object.assign(PRECIOS_CATALOGO,{"609": 917.33, "610": 969.86, "611": 1052.22, "612": 671.5, "613": 586.5, "614": 2506.3, "615": 1534.28});
+for(const p of productos){if(p.categoria==='Tornillos'&&['609','610','611'].includes(p.codigo))p.foto='imagenes/tornillos/inodoro-bidet-malvar.png';}
+
+/* Sifones y accesorios para pileta */
+productos.push(...[{"codigo": "620", "subcategoria": "Sifón simple", "descripcion": "SIFÓN SIMPLE DE PVC", "medida": "", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101510, "foto": "imagenes/sifones/producto-0.png"}, {"codigo": "621", "subcategoria": "Sifón doble", "descripcion": "SIFÓN DOBLE DE PVC", "medida": "", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101511, "foto": "imagenes/sifones/producto-1.png"}, {"codigo": "622", "subcategoria": "Fuelle alargue", "descripcion": "FUELLE DE GOMA ALARGUE PARA SIFÓN", "medida": "15 cm", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101512, "foto": "imagenes/sifones/producto-2.png"}, {"codigo": "623", "subcategoria": "Fuelle alargue", "descripcion": "FUELLE DE GOMA ALARGUE PARA SIFÓN", "medida": "25 cm", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101513, "foto": "imagenes/sifones/producto-2.png"}, {"codigo": "624", "subcategoria": "Abrazadera metálica", "descripcion": "ABRAZADERA METÁLICA PARA SIFÓN", "medida": "", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101514, "foto": "imagenes/sifones/producto-3.png"}, {"codigo": "625", "subcategoria": "Codo", "descripcion": "CODO DE GOMA PARA SIFÓN DOBLE MALVAR", "medida": "", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101515, "foto": "imagenes/sifones/producto-4.png"}, {"codigo": "627", "subcategoria": "Codo", "descripcion": "CODO PARA SIFÓN DOBLE ECONÓMICO", "medida": "", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101516, "foto": "imagenes/sifones/producto-4.png"}, {"codigo": "626", "subcategoria": "Abrazadera de plástico", "descripcion": "ABRAZADERA DE PLÁSTICO NYLON PARA SIFÓN", "medida": "", "categoria": "Sifones y accesorios para pileta", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101517, "foto": "imagenes/sifones/producto-5.png"}]);
+
+productos.push(...[{"codigo": "2100", "subcategoria": "Botón lateral", "descripcion": "BOTÓN LATERAL P/ MOCHILA TIPO CAPEA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101518, "foto": "imagenes/capea/2100.svg"}, {"codigo": "2101", "subcategoria": "Perilla con tirador", "descripcion": "PERILLA C/TIRADOR PLÁSTICO P/ MOCHILA TIPO CAPEA VENECIA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101519, "foto": "imagenes/capea/2101.svg"}, {"codigo": "2102", "subcategoria": "Botón chico plástico", "descripcion": "BOTÓN CHICO PLÁSTICO BLANCO TIPO CAPEA DELTA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101520, "foto": "imagenes/capea/2102-2103.svg"}, {"codigo": "2103", "subcategoria": "Botón chico plástico", "descripcion": "BOTÓN CHICO PLÁSTICO CROMADO TIPO CAPEA DELTA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101521, "foto": "imagenes/capea/2102-2103.svg"}, {"codigo": "2104", "subcategoria": "Botón superior plástico", "descripcion": "BOTÓN SUPERIOR PLÁSTICO P/ MOCHILA TIPO CAPEA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101522, "foto": "imagenes/capea/2104.svg"}, {"codigo": "2105", "subcategoria": "Agarre de perilla", "descripcion": "AGARRE PERILLA CROMADA P/ TIRADOR VENECIA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101523, "foto": "imagenes/capea/2105.svg"}, {"codigo": "2106", "subcategoria": "Manija plástica", "descripcion": "MANIJA PLÁSTICA PARA MOCHILA TIPO MAYO", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101524, "foto": "imagenes/capea/2106.svg"}, {"codigo": "2107", "subcategoria": "Botón rectangular", "descripcion": "BOTÓN PLÁSTICO RECTANGULAR PARA MOCHILA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101525, "foto": "imagenes/capea/2107.svg"}, {"codigo": "2108", "subcategoria": "Botón redondo", "descripcion": "BOTÓN PARA MOCHILA REDONDO TIPO ROCA", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101526, "foto": "imagenes/capea/2108.svg"}, {"codigo": "2109", "subcategoria": "Botón descarga dual con vástago", "descripcion": "BOTÓN MOCHILA DESCARGA DUAL C/ VÁSTAGO", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101527, "foto": "imagenes/capea/2109.svg"}, {"codigo": "VAM10", "subcategoria": "Botón descarga dual", "descripcion": "BOTÓN MOCHILA DESCARGA DUAL", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101528, "foto": "imagenes/capea/VAM10.svg"}, {"codigo": "VAM09", "subcategoria": "Botón superior descarga simple", "descripcion": "BOTÓN SUPERIOR DESCARGA SIMPLE", "medida": "", "categoria": "Accesorios para mochila Capea", "pagina": "", "origen": "EL TURCO 08-10-2026", "id": 101529, "foto": "imagenes/capea/VAM09.svg"}]);
 function categorias(){
   const c={'Acoples rápidos':[],'Rollos pileteros':[],'Grampas omegas para agua':[]};
   productos.forEach(p=>{ if(!c[p.categoria]) c[p.categoria]=[]; if(!c[p.categoria].includes(p.subcategoria)) c[p.categoria].push(p.subcategoria); });
@@ -2249,6 +2286,7 @@ function sigasGrupo(p){
   return mapa[sub]||sub.toUpperCase()||'SIGAS';
 }
 function sigasMedida(p,grupo){
+  if(p.subcategoria==='Abrazaderas zincadas') return p.medida;
   if(['Reguladores para gas natural sigas','PILAR sigas','Valvula de paso de 3/4 de gas','REGULADORES DE GAS 10KG BROGAS'].includes(p.subcategoria)) return p.descripcion;
   const desc=String(p.descripcion||'');
   let m=desc.match(/(\d+\s*x\s*(?:\d+|1\/2|3\/4|1")\s*(?:mm|HEMBRA|MACHO)?)/i);
@@ -3056,7 +3094,7 @@ function renderProductos(){
   const esAcoplesRapidos=categoriaActual==='Acoples rápidos' && !q;
   const esGrampasOmegas=categoriaActual==='Grampas omegas para agua' && !q;
   const esRollosPileteros=categoriaActual==='Rollos pileteros' && !q;
-  const esConexionesRedes=['Conexiones de redes','Tubo de polietileno y accesorios'].includes(categoriaActual) && !q;
+  const esConexionesRedes=['Conexiones de redes','Tubo de polietileno y accesorios','Tornillos','Sifones y accesorios para pileta',"Accesorios para mochila Capea"].includes(categoriaActual) && !q;
   const vistaEspecial=esConexionesRedes||esAcoplesRapidos||esGrampasOmegas||esRollosPileteros||esTanquesWaterplast||esLatyn||esPP||esEpoxi||esSigas||esGalvanizado||esFlexibles||esEspigas||esBronceria||esBrogas||esGali||esDuratop||esAmancoSilentium||esJuntaPegar||esAmancoPVCNivel1||esAbrazaderas||esCanos||esBombasPresurizadoras||esTermocuplasAccesorios||esTapasInspeccion||esLineaPracticaBano||esGomasMochilaBidet||esCalefonesAccesorios||esConexionInodoroMochila||esArticulosJardin||esValvulasRepuestos||esGriferiasItepa||esBotiquinesCampanas||esBoyasDescarga||esBoyasTanque||esSopapas||esAqualaf;
   ['inicioCatalogo','elegiCategoria','habituales'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display=(vistaEspecial||modoBusqueda)?'none':'';});
   document.querySelectorAll('.notice').forEach(el=>{el.style.display=(vistaEspecial||modoBusqueda)?'none':''});
@@ -3212,7 +3250,7 @@ function descripcionPedido(item){
   else if(producto.categoria==='Epoxi') medida=epoxiMedida(producto,epoxiGrupo(producto));
   else if(producto.categoria==='Galvanizado') medida=galvanizadoMedida(producto,galvanizadoGrupo(producto));
   else if(producto.categoria==='Flexibles') medida=flexibleMedida(producto,producto.subcategoria);
-  else if(['Conexiones de redes','Tubo de polietileno y accesorios'].includes(producto.categoria)) medida=producto.medida||'';
+  else if(['Conexiones de redes','Tubo de polietileno y accesorios','Tornillos'].includes(producto.categoria)) medida=producto.medida||'';
   const normalizar=t=>String(t).replace(/["“”″]/g,'').replace(/\s+/g,' ').trim().toUpperCase();
   const d=normalizar(descripcion),m=normalizar(medida);
   // Add only a numeric measurement, never a family/category label.
