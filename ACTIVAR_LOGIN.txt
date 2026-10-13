@@ -1,0 +1,14 @@
+Apps Script ya fue implementado y login-config.js contiene la URL. Solo falta publicar el catálogo actualizado y probar el acceso desde GitHub Pages.
+
+ACCESO EL TURCO
+
+1. En Apps Script, reemplazar las funciones anteriores validarCliente y probarLogin por las del archivo Login_AppsScript.gs. Agregar también doPost. Mantener todas las funciones de pedidos y correo. Debe existir una sola función de cada nombre.
+2. Ejecutar probarLogin: debe devolver ok:true para el correo pedidos.elturco@gmail.com y la contraseña PRUEBA.
+3. Implementar > Nueva implementación > Aplicación web. Ejecutar como: tu cuenta. Acceso: Cualquier usuario. Autorizar y copiar la URL terminada en /exec.
+4. Pegar esa URL entre las comillas de login-config.js. Publicar los archivos del catálogo, incluyendo login.css, login.js y login-config.js. El archivo .gs y estas instrucciones no necesitan publicarse en GitHub.
+5. Probar el acceso publicado. Confirmar que un número inexistente, un cliente inactivo y un correo distinto del registrado sean rechazados. Probar el primer registro con un cliente de prueba nuevo cuya columna C esté vacía; verificar que se guarde el correo. No usar un cliente real para esta prueba.
+
+La primera vez el cliente registra su correo usando su número como contraseña. Si ya hay un correo en C, debe coincidir; no se reemplaza. Para corregirlo, editar C manualmente en la planilla. Guardar números de cliente como texto si tienen ceros iniciales.
+No se verifica la propiedad del correo mediante un código: se asocia el correo que escribe quien conoce el número de cliente.
+La portada controla el ingreso a la interfaz; los archivos y precios del catálogo estático siguen siendo públicos en GitHub Pages.
+La conexión real queda pendiente hasta configurar y probar la URL de implementación. Los pedidos siguen enviándose por WhatsApp como en el ZIP original.

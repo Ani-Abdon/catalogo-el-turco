@@ -224,8 +224,14 @@ body{background:#f6f8fb}
  .pp-families{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))!important}
 }
 </style>
+<link rel="stylesheet" href="login.css">
 </head>
-<body>
+<body class="acceso-pendiente">
+<section id="acceso-portada" aria-label="Ingreso de clientes">
+<div class="acceso-marca">Distribuidora <strong>El Turco</strong><small>Osvaldo Abdon e hijos</small></div>
+<div class="acceso-tarjeta"><span class="acceso-etiqueta">ACCESO EXCLUSIVO PARA CLIENTES</span><h1>Bienvenido a El Turco</h1><p>Tu catálogo. Tu vendedor. Tus pedidos.</p>
+<form id="acceso-form"><label for="acceso-correo">Correo electrónico<input id="acceso-correo" type="email" placeholder="nombre@correo.com" autocomplete="username" required maxlength="254"></label><label for="acceso-clave">Contraseña<div class="acceso-password"><input id="acceso-clave" type="password" placeholder="Tu número de cliente" autocomplete="current-password" required maxlength="100"><button id="acceso-ver" type="button" aria-label="Mostrar u ocultar contraseña">Ver</button></div></label><button id="acceso-ingresar" type="submit">Ingresar al catálogo →</button></form><small class="acceso-ayuda">¿Necesitás ayuda? Contactá a tu vendedor.</small><p id="acceso-mensaje" role="alert"></p></div>
+</section><div id="acceso-cuenta" hidden><span id="acceso-nombre"></span><button id="acceso-salir" type="button">Cerrar sesión</button></div>
 <header>
   <div class="top">
     <button class="cartTop" onclick="abrirCarrito()">🛒 Ver carrito (<span id="countTop">0</span>)</button>
@@ -3504,5 +3510,7 @@ renderNovedades();
 completarGaleriasAgrupadas();
 mostrarCantidadFotos();
 </script>
+<script src="login-config.js"></script>
+<script src="login.js"></script>
 </body>
 </html>

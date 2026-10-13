@@ -1,0 +1,12 @@
+body.acceso-pendiente{overflow:hidden}
+body.acceso-pendiente>header,body.acceso-pendiente>.layout{visibility:hidden}
+#acceso-portada[hidden],#acceso-cuenta[hidden]{display:none!important}
+#acceso-portada{position:fixed;inset:0;z-index:100000;overflow:auto;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:32px 20px;background:radial-gradient(ellipse at top,#273c4e,#101b27);color:#f6f4ef;font-family:Arial,sans-serif}
+.acceso-marca{text-align:center;font-size:17px;letter-spacing:.2px}.acceso-marca strong{display:block;font-size:34px;line-height:1.2}.acceso-marca small{display:block;margin-top:6px;font-size:12px}
+.acceso-tarjeta{width:100%;max-width:410px;box-sizing:border-box;padding:32px;background:#1e2c3b;border:1px solid #405162;border-radius:18px}
+.acceso-etiqueta{font-size:11px;letter-spacing:1.8px;color:#e5c28a}.acceso-tarjeta h1{font-size:25px;line-height:1.2;margin:14px 0 8px;color:#f6f4ef}.acceso-tarjeta p{font-size:15px;line-height:1.5;color:#bdcad4;margin:0 0 24px}
+#acceso-form label{display:block;font-size:13px;font-weight:600;margin:0 0 18px;color:#f6f4ef}#acceso-form input{display:block;box-sizing:border-box;width:100%;margin-top:7px;padding:13px 14px;border:1px solid #4a5c6d;border-radius:8px;background:#142230;color:#fff;font:16px Arial,sans-serif}#acceso-form input::placeholder{color:#aebecb}.acceso-password{position:relative}.acceso-password input{padding-right:70px!important}
+#acceso-ver{position:absolute;right:8px;top:5px;min-height:38px;background:transparent;color:#e5c28a;border:0;padding:8px;font:13px Arial,sans-serif}
+#acceso-ingresar{width:100%;padding:14px;border:0;border-radius:8px;background:#e5c28a;color:#182535;font:600 15px Arial,sans-serif;margin:3px 0 22px;cursor:pointer}#acceso-ingresar:disabled{opacity:.65;cursor:wait}.acceso-ayuda{display:block;text-align:center;color:#bdcad4;font-size:12px}#acceso-mensaje{color:#ffd4bf;font-size:13px;margin:14px 0 0;min-height:20px}
+#acceso-cuenta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;background:#1e2c3b;color:#fff;font:14px Arial,sans-serif}#acceso-salir{background:transparent;color:#e5c28a;border:1px solid #4a5c6d;border-radius:6px;padding:8px;cursor:pointer}
+@media(max-width:480px){.acceso-tarjeta{padding:24px}#acceso-portada{gap:22px;padding:24px 16px}}@media(max-height:650px){#acceso-portada{justify-content:flex-start}}
