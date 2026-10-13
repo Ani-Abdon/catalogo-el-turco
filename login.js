@@ -32,14 +32,12 @@
       document.getElementById('cliente').value = client.ferreteria;
       document.getElementById('cliente').readOnly = true;
       document.getElementById('contacto').value = client.correo;
-      const normalized = client.vendedor.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
       const sellers = document.getElementById('vendedor');
-      const option = [...sellers.options].find(o => o.value && (normalized === o.value || normalized.startsWith(o.value + ' ')));
-      if (option) { sellers.value = option.value; sellers.disabled = true; }
+      sellers.value = '';
+      sellers.disabled = false;
       const restaurarCliente = () => {
         document.getElementById('cliente').value = client.ferreteria;
         document.getElementById('contacto').value = client.correo;
-        if (option) sellers.value = option.value;
       };
       if (typeof enviarPedido === 'function') {
         const enviarOriginal = enviarPedido;
