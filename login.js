@@ -30,7 +30,8 @@
     button.disabled = true;
     button.textContent = 'Ingresando…';
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
+    const timeout = setTimeout(() => controller.abort(), 60000);
+    let fase = 'conexion';
     try {
       const response = await fetch(window.EL_TURCO_LOGIN_URL, {
         method: 'POST',
@@ -38,9 +39,12 @@
         body: JSON.stringify({accion: 'login', correo, contrasena: clave}),
         signal: controller.signal
       });
-      if (!response.ok) throw new Error('connection');
+      if (!response.ok) throw new Error('http-' + response.status);
+      fase = 'respuesta';
       const result = await response.json();
       if (!result.ok) { message.textContent = result.mensaje || 'No se pudo ingresar.'; return; }
+      fase = 'catalogo';
+      clearTimeout(timeout);
       const client = result.cliente;
       // Notify supported password managers only after the server accepts the login.
       // The browser manages consent and storage; credentials are never saved in localStorage.
@@ -76,9 +80,19 @@
       document.getElementById('acceso-portada').hidden = true;
       document.getElementById('acceso-cuenta').hidden = false;
       document.body.classList.remove('acceso-pendiente');
-      if (typeof guardarPedido === 'function') guardarPedido();
+      if (typeof guardarPedido === 'function') {
+        try { guardarPedido(); } catch (_) { /* Storage settings must not block a valid login. */ }
+      }
     } catch (error) {
-      message.textContent = 'No pudimos conectar. Intentá nuevamente.';
+      if (error.name === 'AbortError') {
+        message.textContent = 'La conexión está tardando más de lo esperado. Intentá ingresar nuevamente.';
+      } else if (fase === 'catalogo') {
+        message.textContent = 'Tus datos fueron aceptados, pero no pudimos abrir el catálogo. Recargá la página e intentá nuevamente.';
+      } else if (fase === 'respuesta') {
+        message.textContent = 'El servicio de acceso devolvió una respuesta inesperada. Intentá nuevamente en unos instantes.';
+      } else {
+        message.textContent = 'No pudimos conectar con el servicio de acceso. Revisá tu conexión e intentá nuevamente.';
+      }
     } finally { clearTimeout(timeout); button.disabled = false; button.textContent = 'Ingresar al catálogo →'; }
   });
   document.getElementById('acceso-salir').addEventListener('click', () => location.reload());
