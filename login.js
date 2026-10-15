@@ -2,6 +2,17 @@
   const form = document.getElementById('acceso-form');
   const message = document.getElementById('acceso-mensaje');
   const button = document.getElementById('acceso-ingresar');
+  const emailField = document.getElementById('acceso-correo');
+  const passwordField = document.getElementById('acceso-clave');
+  form.setAttribute('autocomplete', 'on');
+  form.setAttribute('method', 'post');
+  emailField.name = 'username';
+  emailField.autocomplete = 'username';
+  emailField.autocapitalize = 'none';
+  emailField.spellcheck = false;
+  passwordField.name = 'password';
+  passwordField.autocomplete = 'current-password';
+
   document.getElementById('acceso-ver').addEventListener('click', () => {
     const field = document.getElementById('acceso-clave');
     field.type = field.type === 'password' ? 'text' : 'password';
@@ -14,6 +25,8 @@
       message.textContent = 'El acceso todavía está pendiente de activación. Contactá a tu vendedor.';
       return;
     }
+    const correo = emailField.value.trim();
+    const clave = passwordField.value.trim();
     button.disabled = true;
     button.textContent = 'Ingresando…';
     const controller = new AbortController();
@@ -22,13 +35,24 @@
       const response = await fetch(window.EL_TURCO_LOGIN_URL, {
         method: 'POST',
         headers: {'Content-Type': 'text/plain;charset=utf-8'},
-        body: JSON.stringify({accion: 'login', correo: document.getElementById('acceso-correo').value.trim(), contrasena: document.getElementById('acceso-clave').value.trim()}),
+        body: JSON.stringify({accion: 'login', correo, contrasena: clave}),
         signal: controller.signal
       });
       if (!response.ok) throw new Error('connection');
       const result = await response.json();
       if (!result.ok) { message.textContent = result.mensaje || 'No se pudo ingresar.'; return; }
       const client = result.cliente;
+      // Notify supported password managers only after the server accepts the login.
+      // The browser manages consent and storage; credentials are never saved in localStorage.
+      if (window.isSecureContext && typeof window.PasswordCredential === 'function' &&
+          navigator.credentials && typeof navigator.credentials.store === 'function') {
+        try {
+          const credential = new window.PasswordCredential({
+            id: correo, password: clave, name: client.ferreteria || correo
+          });
+          Promise.resolve(navigator.credentials.store(credential)).catch(() => {});
+        } catch (_) { /* Unsupported or disabled manager must not block login. */ }
+      }
       document.getElementById('cliente').value = client.ferreteria;
       document.getElementById('cliente').readOnly = true;
       document.getElementById('contacto').value = client.correo;
