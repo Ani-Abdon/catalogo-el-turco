@@ -12,6 +12,27 @@
   emailField.spellcheck = false;
   passwordField.name = 'password';
   passwordField.autocomplete = 'current-password';
+  const rememberKey = 'elTurcoDatosAcceso';
+  const rememberLabel = document.createElement('label');
+  rememberLabel.style.cssText = 'display:flex;align-items:center;gap:9px;cursor:pointer';
+  const rememberField = document.createElement('input');
+  rememberField.type = 'checkbox';
+  rememberField.id = 'acceso-recordar';
+  rememberField.style.cssText = 'width:18px;height:18px;margin:0;flex:none;accent-color:#e5c28a';
+  rememberLabel.append(rememberField, document.createTextNode('Recordar mis datos en este dispositivo'));
+  form.insertBefore(rememberLabel, button);
+  try {
+    const saved = JSON.parse(localStorage.getItem(rememberKey) || 'null');
+    if (saved && typeof saved.correo === 'string') {
+      emailField.value = saved.correo;
+      rememberField.checked = true;
+    }
+  } catch (_) { /* Unavailable storage must not block access. */ }
+  rememberField.addEventListener('change', () => {
+    if (!rememberField.checked) {
+      try { localStorage.removeItem(rememberKey); } catch (_) {}
+    }
+  });
 
   document.getElementById('acceso-ver').addEventListener('click', () => {
     const field = document.getElementById('acceso-clave');
@@ -46,9 +67,13 @@
       fase = 'catalogo';
       clearTimeout(timeout);
       const client = result.cliente;
+      try {
+        if (rememberField.checked) localStorage.setItem(rememberKey, JSON.stringify({correo}));
+        else localStorage.removeItem(rememberKey);
+      } catch (_) { /* Unavailable storage must not block a valid login. */ }
       // Notify supported password managers only after the server accepts the login.
-      // The browser manages consent and storage; credentials are never saved in localStorage.
-      if (window.isSecureContext && typeof window.PasswordCredential === 'function' &&
+      // Ask the browser to save credentials only when the client opts in.
+      if (rememberField.checked && window.isSecureContext && typeof window.PasswordCredential === 'function' &&
           navigator.credentials && typeof navigator.credentials.store === 'function') {
         try {
           const credential = new window.PasswordCredential({
