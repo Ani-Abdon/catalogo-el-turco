@@ -3272,7 +3272,7 @@ function descripcionPedido(item){
   else if(producto.categoria==='Epoxi') medida=epoxiMedida(producto,epoxiGrupo(producto));
   else if(producto.categoria==='Galvanizado') medida=galvanizadoMedida(producto,galvanizadoGrupo(producto));
   else if(producto.categoria==='Flexibles') medida=flexibleMedida(producto,producto.subcategoria);
-  else if(['Conexiones de redes','Tubo de polietileno y accesorios','Tornillos'].includes(producto.categoria)) medida=producto.medida||'';
+  else if(['Conexiones de redes','Tubo de polietileno y accesorios','Tornillos','Grampas omegas para agua'].includes(producto.categoria)) medida=producto.medida||'';
   const normalizar=t=>String(t).replace(/["“”″]/g,'').replace(/\s+/g,' ').trim().toUpperCase();
   const d=normalizar(descripcion),m=normalizar(medida);
   // Add only a numeric measurement, never a family/category label.
