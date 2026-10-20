@@ -3298,14 +3298,28 @@ function lineas(){
     if(!grupos.has(categoria))grupos.set(categoria,[]);
     grupos.get(categoria).push(item);
   });
-  const filas=[...grupos.keys()].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'})).map(categoria=>
-    '*'+categoria.toUpperCase()+'*\n'+grupos.get(categoria).map(p=>{
-      const descripcion=descripcionPedido(p);
-      const producto=productos.find(item=>item.id===p.id)||p;
-      const codigo=String(producto.codigo||p.codigo||'').trim();
-      return '*'+String(p.cantidad||'')+'* | '+(codigo?'*'+codigo+'* | ':'')+descripcion;
-    }).join('\n')
-  ).join('\n\n');
+  const filas=[...grupos.keys()].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'})).map(categoria=>{
+    const tarjetas=new Map();
+    grupos.get(categoria).forEach(item=>{
+      const producto=productos.find(p=>p.id===item.id)||productos.find(p=>String(p.codigo)===String(item.codigo))||item;
+      let tarjeta=String(producto.subcategoria||item.subcategoria||'Productos').trim();
+      if(categoria==='PP') tarjeta=ppGrupo(producto);
+      else if(categoria==='Espigas') tarjeta=espigaGrupo(producto);
+      else if(categoria==='Epoxi') tarjeta=epoxiGrupo(producto);
+      else if(categoria==='Sigas') tarjeta=sigasGrupo(producto);
+      else if(categoria==='Galvanizado') tarjeta=galvanizadoGrupo(producto);
+      if(!tarjetas.has(tarjeta)) tarjetas.set(tarjeta,[]);
+      tarjetas.get(tarjeta).push(item);
+    });
+    return '*'+categoria.toUpperCase()+'*\n'+[...tarjetas].map(([tarjeta,items])=>
+      '*'+tarjeta+'*\n'+items.map(p=>{
+        const descripcion=descripcionPedido(p);
+        const producto=productos.find(item=>item.id===p.id)||productos.find(item=>String(item.codigo)===String(p.codigo))||p;
+        const codigo=String(producto.codigo||p.codigo||'').trim();
+        return '*'+String(p.cantidad||'')+'* | '+(codigo?'*'+codigo+'* | ':'')+descripcion;
+      }).join('\n')
+    ).join('\n\n');
+  }).join('\n\n');
   return 'Nuevo pedido - Distribuidora El Turco\n\n'+
     'Cliente: '+cliente+'\n'+
     'Vendedor: '+(vendedor?.nombre||'Sin seleccionar')+'\n'+
