@@ -2570,10 +2570,10 @@ function renderVistaAmancoSilentium(lista){
 function renderVistaAmancoPVCNivel1(lista){
   const porGrupo={};
   lista.forEach(p=>{ const g=p.subcategoria||'Amanco PVC nivel 1'; if(!porGrupo[g]) porGrupo[g]=[]; porGrupo[g].push(p); });
-  const orden=['Tubos','Tubos Premium 3,2','Canaleta Raingo','Tapas para canaleta','Uniones de Canaleta','Unión de esquina','Soporte para canaleta','Tubo bajante','Soporte para bajante','Codos para bajante','Codos HH A 90','Codos MH A 90','Cuplas','Curva Larga Macho A 45','Curva Larga Hembra A 45','Codo Corto Macho A 45','Codo Corto Hembra A 45','Curva Macho A 90','Curva Hembra A 90','Tapas','Cuplas Reducción Concéntricas','Cuplas Reducción Excéntricas','Tee','Tee Reducción','Tee Curvo','Ramal A 45','Ramal Reducción'];
+  const orden=['Tubos','Tubos eco','Tubos Premium 3,2','Canaleta Raingo','Tapas para canaleta','Uniones de Canaleta','Unión de esquina','Soporte para canaleta','Tubo bajante','Soporte para bajante','Codos para bajante','Codos HH A 90','Codos MH A 90','Cuplas','Curva Larga Macho A 45','Curva Larga Hembra A 45','Codo Corto Macho A 45','Codo Corto Hembra A 45','Curva Macho A 90','Curva Hembra A 90','Tapas','Cuplas Reducción Concéntricas','Cuplas Reducción Excéntricas','Tee','Tee Reducción','Tee Curvo','Ramal A 45','Ramal Reducción'];
   const grupos=orden.filter(g=>porGrupo[g]).concat(Object.keys(porGrupo).filter(g=>!orden.includes(g)).sort((a,b)=>a.localeCompare(b,'es',{numeric:true})));
   const itemsHtml=grupos.map(grupo=>{
-    const items=porGrupo[grupo].slice().sort((a,b)=>Number(a.id)-Number(b.id));
+    const items=porGrupo[grupo].slice().sort((a,b)=>grupo==='Tubos eco' ? a.codigo.localeCompare(b.codigo,'es',{numeric:true}) : Number(a.id)-Number(b.id));
     const fotos=galeriaItems(items);
     const foto=fotos[0]||'';
     const rows=items.map(p=>`<tr><td class="miniCode">${escHtml(p.codigo)}${precioHtml(p)}</td><td>${escHtml(p.descripcion)}</td><td><div class="stepper"><button onclick="ajustarCantidad(${p.id},-1)">−</button><input data-cant-id="${p.id}" type="number" min="0" step="1" value="${cantidadEnPedido(p.id)}" oninput="setCantidadManual(${p.id},this.value)" onclick="this.select()"><button onclick="ajustarCantidad(${p.id},1)">+</button></div></td></tr>`).join('');
