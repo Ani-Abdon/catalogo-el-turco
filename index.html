@@ -3299,7 +3299,7 @@ function lineas(){
       const descripcion=descripcionPedido(p);
       const producto=productos.find(item=>item.id===p.id)||p;
       const codigo=String(producto.codigo||p.codigo||'').trim();
-      return '*'+String(p.cantidad||'')+'* × '+(codigo?'*'+codigo+'* - ':'')+descripcion;
+      return '*'+String(p.cantidad||'')+'* | '+(codigo?'*'+codigo+'* | ':'')+descripcion;
     }).join('\n')
   ).join('\n\n');
   return 'Nuevo pedido - Distribuidora El Turco\n\n'+
