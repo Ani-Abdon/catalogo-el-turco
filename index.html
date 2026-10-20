@@ -3295,7 +3295,12 @@ function lineas(){
     grupos.get(categoria).push(item);
   });
   const filas=[...grupos.keys()].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'})).map(categoria=>
-    '*'+categoria.toUpperCase()+'*\n'+grupos.get(categoria).map(p=>'*'+String(p.cantidad||'')+'* × '+descripcionPedido(p)).join('\n')
+    '*'+categoria.toUpperCase()+'*\n'+grupos.get(categoria).map(p=>{
+      const descripcion=descripcionPedido(p);
+      const producto=productos.find(item=>item.id===p.id)||p;
+      const codigo=String(producto.codigo||p.codigo||'').trim();
+      return '*'+String(p.cantidad||'')+'* × '+(codigo?'*'+codigo+'* - ':'')+descripcion;
+    }).join('\n')
   ).join('\n\n');
   return 'Nuevo pedido - Distribuidora El Turco\n\n'+
     'Cliente: '+cliente+'\n'+
