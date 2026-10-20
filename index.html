@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta name="catalogo-version" content="20261020-pedidos-3">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Distribuidora El Turco - Catálogo</title>
 <style>
@@ -3330,7 +3332,33 @@ function lineas(){
     'Fecha: '+fecha+'\n\n'+filas+
     (obs?'\n\nObservaciones:\n'+obs:'');
 }
-function enviarPedido(){
+const VERSION_CATALOGO='20261020-pedidos-3';
+async function comprobarVersionPedido(){
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),15000);
+  try{
+    const url=new URL(location.href);
+    url.searchParams.set('comprobar',Date.now().toString());
+    const response=await fetch(url.href,{cache:'no-store',signal:controller.signal});
+    if(!response.ok) throw new Error('version');
+    const html=await response.text();
+    const actual=html.match(/<meta name="catalogo-version" content="([^"]+)"/);
+    if(!actual) throw new Error('version');
+    if(actual[1]!==VERSION_CATALOGO){
+      guardarPedido();
+      url.searchParams.delete('comprobar');
+      url.searchParams.set('v',actual[1]);
+      alert('Hay una actualización del catálogo. Guardamos tu carrito y vamos a cargarla. Después, tocá Enviar nuevamente.');
+      location.replace(url.href);
+      return false;
+    }
+    return true;
+  }catch(error){
+    alert('No pudimos comprobar la actualización. Tu carrito sigue guardado. Revisá la conexión y volvé a intentar.');
+    return false;
+  }finally{clearTimeout(timeout);}
+}
+async function enviarPedido(){
   const clienteInput=document.getElementById('cliente');
   const vendedorSelect=document.getElementById('vendedor');
   if(!clienteInput.value.trim()){
@@ -3350,6 +3378,8 @@ function enviarPedido(){
     alert('Hay un producto sin código. Quitalo del carrito y volvé a agregarlo antes de enviar.');
     return;
   }
+  guardarPedido();
+  if(!await comprobarVersionPedido()) return;
   guardarPedidoEnHistorial();
   const vendedor=VENDEDORES[vendedorSelect.value];
   const whatsappUrl='https://wa.me/'+vendedor.telefono+'?text='+encodeURIComponent(lineas());
