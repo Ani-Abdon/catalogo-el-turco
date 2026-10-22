@@ -30,7 +30,7 @@
       const timer = setTimeout(() => {
         notice('No se pudieron actualizar los precios. Se muestran los precios guardados; confirmá su vigencia con tu vendedor.', true);
         finish(false);
-      }, 20000);
+      }, 60000);
       window[callback] = data => {
         try {
           if (!data || data.ok !== true || !data.prices || typeof data.prices !== 'object') throw new Error('Respuesta inválida');
@@ -47,12 +47,21 @@
           finish(false);
         }
       };
+      script.crossOrigin = 'anonymous';
       script.onerror = () => {
         notice('No se pudieron actualizar los precios. Se muestran los precios guardados; confirmá su vigencia con tu vendedor.', true);
         finish(false);
       };
-      script.src = endpoint + '?callback=' + callback + '&t=' + Date.now();
-      document.head.appendChild(script);
+      notice('Actualizando precios desde Google Sheets…', false);
+      fetch(endpoint + '?t=' + Date.now(), {credentials:'omit', cache:'no-store'})
+        .then(response => { if (!response.ok) throw new Error('HTTP ' + response.status); return response.json(); })
+        .then(data => { if (!settled) window[callback](data); })
+        .catch(error => {
+          if (settled) return;
+          console.warn('Consulta de precios: se intentará el método alternativo.', error);
+          script.src = endpoint + '?callback=' + callback + '&t=' + Date.now();
+          document.head.appendChild(script);
+        });
     });
     return pending;
   }
