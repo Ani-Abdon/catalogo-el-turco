@@ -36,10 +36,21 @@
           if (!data || data.ok !== true || !data.prices || typeof data.prices !== 'object') throw new Error('Respuesta inválida');
           const entries = Object.entries(data.prices).filter(([code, value]) => /^[A-Z0-9][A-Z0-9/".\-]*$/.test(code) && typeof value === 'number' && Number.isFinite(value) && value > 0);
           if (entries.length < 10) throw new Error('Lista incompleta');
+          const validVariantKeys = new Set(Array.from({length:8},(_,i)=>['1 1/4"','1 1/2"','2"'].map(measure=>'J'+(150+i)+'|'+measure)).flat());
+          const variants = Object.entries(data.variants || {}).filter(([key,value]) => validVariantKeys.has(key) && typeof value === 'number' && Number.isFinite(value) && value > 0);
+          if (variants.length !== 24) throw new Error('Variantes incompletas');
+          Object.keys(PRECIOS_CATALOGO).forEach(code => delete PRECIOS_CATALOGO[code]);
+          Object.keys(PRECIOS_VARIANTES).forEach(key => delete PRECIOS_VARIANTES[key]);
           for (const [code, value] of entries) PRECIOS_CATALOGO[code] = Math.round(value * 100) / 100;
+          for (const [key, value] of variants) PRECIOS_VARIANTES[key] = Math.round(value * 100) / 100;
+          for (const product of productos) {
+            const original = String(product.codigo || '').trim().toUpperCase().replace(/\s+/g,'');
+            const normalized = original.replace(/\.+$/,'');
+            if (original !== normalized && Object.prototype.hasOwnProperty.call(PRECIOS_CATALOGO, normalized)) PRECIOS_CATALOGO[original] = PRECIOS_CATALOGO[normalized];
+          }
           lastRefresh = Date.now();
           renderProductos(); renderCarrito();
-          notice('Precios sincronizados con Google Sheets. Los códigos sin coincidencia y las variantes conservan su precio guardado.', false);
+          notice('Precios sincronizados con Google Sheets. Los productos sin un importe confirmado figuran como «Consultar precio».', false);
           window.dispatchEvent(new CustomEvent('el-turco-precios-actualizados', {detail:{count:entries.length, updatedAt:data.updatedAt}}));
           finish(true);
         } catch (error) {
