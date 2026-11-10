@@ -283,7 +283,7 @@ body{background:#f6f8fb}
   <div class="top">
     <button class="cartTop" onclick="abrirCarrito()">🛒 Ver carrito (<span id="countTop">0</span>)</button>
     <div class="brand">Distribuidora El Turco<small>Osvaldo Abdon e hijos</small></div>
-    <div class="search"><input id="q" placeholder="Buscar por código, producto, categoría o página..." oninput="buscar()"><button onclick="limpiar()">Limpiar</button></div>
+    <div class="search"><input id="q" placeholder="Buscar por código, producto, categoría o página..." oninput="programarBusqueda()" onkeydown="if(event.key==='Enter'&&!event.isComposing) buscar()"><button onclick="limpiar()">Limpiar</button></div>
     <div class="tip">Catálogo con precios · Actualizado al 02/11/2026 · Tip: buscá por código exacto, producto, categoría, subcategoría o “página 7”.</div>
   </div>
 </header>
@@ -3271,7 +3271,13 @@ function renderProductos(){
   const mostrar=(exactos?lista:lista.slice(0,300));
   cont.innerHTML=mostrar.map(p=>{const galeria=fotosProducto(p);const foto=galeria[0];return `<article class="prod panel"><div class="img">${foto ? `<img src="${escHtml(foto)}" alt="${escHtml(p.descripcion)}"${dataGaleriaAttr(galeria)} onerror="this.parentElement.innerHTML='<div class=&quot;imgFallback&quot;>${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>'">` : `<div class="imgFallback">${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>`}</div><div class="code">Código ${escHtml(p.codigo)}${precioHtml(p)} · Página ${escHtml(p.pagina)}</div><div class="name">${escHtml(p.descripcion)}</div><div class="meta">${escHtml(p.subcategoria)}</div><div class="stepper" style="justify-content:flex-start;margin-top:auto"><button onclick="ajustarCantidad(${p.id},-1)">−</button><input data-cant-id="${p.id}" type="number" min="0" step="1" value="${cantidadEnPedido(p.id)}" oninput="setCantidadManual(${p.id},this.value)" onclick="this.select()"><button onclick="ajustarCantidad(${p.id},1)">+</button></div></article>`}).join('')+(lista.length>300&&!exactos?`<p class="empty">Mostrando 300 de ${lista.length} productos. Usá el buscador para afinar.</p>`:'');
 }
+let temporizadorBusqueda;
+function programarBusqueda(){
+  clearTimeout(temporizadorBusqueda);
+  temporizadorBusqueda=setTimeout(buscar,180);
+}
 function buscar(){
+  clearTimeout(temporizadorBusqueda);
   const q=document.getElementById('q').value.trim();
   const destino=detectarDestino(q);
   if(destino){
@@ -3279,11 +3285,10 @@ function buscar(){
     saveState();
   } else if(q){ categoriaActual=''; subActual=''; }
   renderMenu();
-  document.getElementById('q').value=q;
   renderProductos();
-  document.getElementById('q').value=q;
 }
 function limpiar(){
+  clearTimeout(temporizadorBusqueda);
   document.getElementById('q').value=''; categoriaActual=''; subActual='';
   localStorage.removeItem('et_categoriaActual'); localStorage.removeItem('et_subActual');
   renderMenu(); renderProductos();
