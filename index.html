@@ -15,9 +15,6 @@ header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;p
 .brand{text-align:center;font-size:31px;font-weight:950;letter-spacing:.4px;text-transform:uppercase}.brand small{display:block;font-size:15px;font-weight:700;opacity:.95;margin-top:4px;text-transform:none}.contactBar{grid-column:1/-1;text-align:center;font-size:13px;opacity:.96;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.contactBar span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 10px}
 .search{display:flex;gap:8px;align-items:center;justify-self:end;width:100%;max-width:520px}.search input{width:100%;border:0;border-radius:12px;padding:13px 14px;font-size:15px}.search button,.btn{border:0;border-radius:12px;padding:12px 14px;font-weight:800;cursor:pointer;background:#fff;color:var(--blue)}
 .cartTop{justify-self:start;background:#ffcc3d;color:#111;border:0;border-radius:999px;padding:12px 16px;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-.ver-todos{margin-bottom:14px;background:var(--blue);color:white}
-.ver-todos:hover,.ver-todos[aria-pressed="true"]{background:var(--blue2)}
-.grid .prod.prod-listado{min-height:0;content-visibility:auto;contain-intrinsic-size:auto 160px}
 .tip{grid-column:1/-1;text-align:center;font-size:12px;opacity:.95;margin-top:2px}
 .layout{display:grid;grid-template-columns:290px 1fr;gap:18px;padding:18px;align-items:start}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
 .sidebar{position:sticky;top:104px;max-height:calc(100vh - 122px);overflow:auto;padding:14px;scrollbar-width:thin}.sidebar h3{margin:4px 0 12px}
@@ -293,7 +290,6 @@ body{background:#f6f8fb}
 <div class="layout">
   <aside class="sidebar panel"><h3>Categorías</h3><div id="menu"></div></aside>
   <main class="main">
-    <button type="button" id="verTodos" class="btn ver-todos" aria-pressed="false" aria-controls="productos" onclick="verTodosLosProductos()">Ver todos los productos</button>
     <section id="inicioCatalogo" class="hero panel"><h1 id="titulo">Catálogo</h1><p id="subtitulo">Elegí una categoría o usá el buscador para encontrar productos.</p><div class="summary"><span class="chip" id="totalChip"></span><span class="chip">Pedido por mail</span><span class="chip">Fotos editables por código</span></div></section>
     <section id="elegiCategoria" class="homeCats panel"><h2>Elegí una categoría</h2><div class="catGrid" id="catCards"></div></section>
     <section id="novedadesAviso" class="novedadesAviso"><div><b>🆕 Hay productos nuevos</b><small id="novedadesTexto"></small></div><button onclick="marcarNovedadesVistas()">Ya los vi</button></section>
@@ -450,7 +446,6 @@ productos.push(...[
   {codigo:'PZESM',descripcion:'PIEZOELÉCTRICO ESTRELLITA CON MASA',categoria:'TERMOCUPLAS Y ACCESORIOS',subcategoria:'Piezos eléctricos',medida:'Estrellita con masa',pagina:0,origen:'LISTADO TERMOCUPLAS',id:1002,foto:''}
 ]);
 let categoriaActual='';
-let verTodo=false;
 let latynAbiertos=new Set();
 let ppAbiertos=new Set();
 let epoxiAbiertos=new Set();
@@ -2001,25 +1996,21 @@ function renderCatCards(){
 }
 function scrollToProductos(){setTimeout(()=>document.getElementById('productos').scrollIntoView({behavior:'smooth',block:'start'}),60)}
 function toggleCategoria(cat){
-  verTodo=false;
   categoriaAbierta = categoriaAbierta===cat ? '' : cat;
   categoriaActual=cat; subActual='';
   saveState(); renderMenu(); renderProductos(); scrollToProductos();
 }
 
 function seleccionarCategoria(cat){
-  verTodo=false;
   categoriaActual=cat; subActual=''; categoriaAbierta=cat;
   saveState(); renderMenu(); renderProductos(); scrollToProductos();
 }
 
 function seleccionarCategoriaDesdeTarjeta(cat){
-  verTodo=false;
   categoriaActual=cat; subActual=''; categoriaAbierta=cat;
   saveState(); renderMenu(); renderProductos(); scrollToProductos();
 }
 function seleccionar(cat,sub){
-  verTodo=false;
   categoriaActual=cat; subActual=sub; categoriaAbierta=cat;
   saveState(); renderMenu(); renderProductos(); scrollToProductos();
 }
@@ -3213,8 +3204,6 @@ function renderProductos(){
   const esSopapas=categoriaActual==='Sopapas' && !q;
   const esAqualaf=categoriaActual==='Griferias Aqualaf' && !q;
   const modoBusqueda=Boolean(q);
-  const listadoCompleto=verTodo&&!q;
-  document.getElementById('verTodos').setAttribute('aria-pressed',String(listadoCompleto));
   const esAcoplesRapidos=categoriaActual==='Acoples rápidos' && !q;
   const esGrampasOmegas=categoriaActual==='Grampas omegas para agua' && !q;
   const esRollosPileteros=categoriaActual==='Rollos pileteros' && !q;
@@ -3226,7 +3215,7 @@ function renderProductos(){
   const layout=document.querySelector('.layout');
   if(sidebar) sidebar.style.display=modoBusqueda?'none':'';
   if(layout) layout.style.gridTemplateColumns=modoBusqueda?'minmax(0,1fr)':'';
-  if(!categoriaActual && !subActual && !q && !listadoCompleto){
+  if(!categoriaActual && !subActual && !q){
     document.getElementById('titulo').textContent='Catálogo';
     document.getElementById('subtitulo').textContent='Seleccioná una categoría para empezar a armar el pedido.';
     cont.innerHTML='<div class="startEmpty"><b>Elegí una categoría para ver productos</b>Usá las tarjetas de arriba o el menú de la izquierda. También podés buscar por código, producto o página.</div>';
@@ -3256,7 +3245,7 @@ function renderProductos(){
       return rangoA-rangoB || codigoA.localeCompare(codigoB,'es',{numeric:true});
     });
   }
-  document.getElementById('titulo').textContent=subActual?`${categoriaActual} · ${subActual}`:(categoriaActual||(listadoCompleto?'Todos los productos':'Resultado de búsqueda'));
+  document.getElementById('titulo').textContent=subActual?`${categoriaActual} · ${subActual}`:(categoriaActual||'Resultado de búsqueda');
   document.getElementById('subtitulo').textContent=lista.length+' productos encontrados';
   if(!lista.length){cont.innerHTML='<p class="empty">No encontré productos con ese filtro.</p>';return;}
   if(categoriaActual==='Tanques Waterplast' && !q){ cont.innerHTML=renderVistaTanquesWaterplast(lista); return; }
@@ -3296,14 +3285,8 @@ function renderProductos(){
   if(categoriaActual==='Gomas para mochila y bidet' && !q){ cont.innerHTML=renderVistaFamiliasBano(lista,'Gomas para mochila y bidet'); return; }
   if(categoriaActual==='Calefones y accesorios' && !q){ cont.innerHTML=renderVistaFamiliasBano(lista,'Calefones y accesorios'); return; }
   const exactos=detectarDestino(q)?.tipo==='codigo';
-  const mostrar=(listadoCompleto||exactos)?lista:lista.slice(0,300);
-  cont.innerHTML=mostrar.map(p=>{const galeria=listadoCompleto?[]:fotosProducto(p);const foto=galeria[0];const medida=(modoBusqueda||listadoCompleto)?medidaResultado(p):'';return `<article class="prod panel${listadoCompleto?' prod-listado':''}">${listadoCompleto?'':`<div class="img">${foto ? `<img src="${escHtml(foto)}" alt="${escHtml(p.descripcion)}"${dataGaleriaAttr(galeria)} onerror="this.parentElement.innerHTML='<div class=&quot;imgFallback&quot;>${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>'">` : `<div class="imgFallback">${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>`}</div>`}<div class="code">Código ${escHtml(p.codigo)}${precioHtml(p)} · Página ${escHtml(p.pagina)}</div><div class="name">${escHtml(p.descripcion)}</div><div class="meta">${listadoCompleto?escHtml(p.categoria)+' · ':''}${escHtml(p.subcategoria)}</div>${medida?`<div class="meta">Medida: ${escHtml(medida)}</div>`: ''}<div class="stepper" style="justify-content:flex-start;margin-top:auto"><button onclick="ajustarCantidad(${p.id},-1)">−</button><input data-cant-id="${p.id}" type="number" min="0" step="1" value="${cantidadEnPedido(p.id)}" oninput="setCantidadManual(${p.id},this.value)" onclick="this.select()"><button onclick="ajustarCantidad(${p.id},1)">+</button></div></article>`}).join('')+(lista.length>300&&!exactos&&!listadoCompleto?`<p class="empty">Mostrando 300 de ${lista.length} productos. Usá el buscador para afinar.</p>`:'');
-}
-function verTodosLosProductos(){
-  limpiar();
-  verTodo=true;
-  renderProductos();
-  scrollToProductos();
+  const mostrar=(exactos?lista:lista.slice(0,300));
+  cont.innerHTML=mostrar.map(p=>{const galeria=fotosProducto(p);const foto=galeria[0];const medida=modoBusqueda?medidaResultado(p):'';return `<article class="prod panel"><div class="img">${foto ? `<img src="${escHtml(foto)}" alt="${escHtml(p.descripcion)}"${dataGaleriaAttr(galeria)} onerror="this.parentElement.innerHTML='<div class=&quot;imgFallback&quot;>${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>'">` : `<div class="imgFallback">${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>`}</div><div class="code">Código ${escHtml(p.codigo)}${precioHtml(p)} · Página ${escHtml(p.pagina)}</div><div class="name">${escHtml(p.descripcion)}</div><div class="meta">${escHtml(p.subcategoria)}</div>${medida?`<div class="meta">Medida: ${escHtml(medida)}</div>`: ''}<div class="stepper" style="justify-content:flex-start;margin-top:auto"><button onclick="ajustarCantidad(${p.id},-1)">−</button><input data-cant-id="${p.id}" type="number" min="0" step="1" value="${cantidadEnPedido(p.id)}" oninput="setCantidadManual(${p.id},this.value)" onclick="this.select()"><button onclick="ajustarCantidad(${p.id},1)">+</button></div></article>`}).join('')+(lista.length>300&&!exactos?`<p class="empty">Mostrando 300 de ${lista.length} productos. Usá el buscador para afinar.</p>`:'');
 }
 let temporizadorBusqueda;
 function programarBusqueda(){
@@ -3318,14 +3301,12 @@ function buscar(){
     categoriaActual=destino.cat||''; subActual=destino.sub||''; categoriaAbierta=destino.cat||categoriaAbierta;
     saveState();
   } else if(q){ categoriaActual=''; subActual=''; }
-  if(q) verTodo=false;
   renderMenu();
   renderProductos();
 }
 function limpiar(){
   clearTimeout(temporizadorBusqueda);
   document.getElementById('q').value=''; categoriaActual=''; subActual='';
-  verTodo=false;
   localStorage.removeItem('et_categoriaActual'); localStorage.removeItem('et_subActual');
   renderMenu(); renderProductos();
 }
