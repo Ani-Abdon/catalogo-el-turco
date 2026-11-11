@@ -2040,7 +2040,9 @@ function listaFiltrada(){
   const destino=detectarDestino(q);
   if(destino?.tipo==='pagina') return productos.filter(p=>Number(p.pagina)===destino.pagina);
   if(destino?.tipo==='codigo') return productos.filter(p=>normal(p.codigo)===normal(q));
-  const nq=normal(q).replace(/\bduque\b/g,'duke');
+  const nq=normal(q)
+    .replace(/\bduque\b/g,'duke')
+    .replace(/\btrampa(s?)(?=\s+omegas?\b)/g,'grampa$1');
   return productos.filter(p=>{
     const okCat=Boolean(q)||!categoriaActual||p.categoria===categoriaActual;
     const okSub=Boolean(q)||!subActual||p.subcategoria===subActual;
