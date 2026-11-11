@@ -2040,7 +2040,7 @@ function listaFiltrada(){
   const destino=detectarDestino(q);
   if(destino?.tipo==='pagina') return productos.filter(p=>Number(p.pagina)===destino.pagina);
   if(destino?.tipo==='codigo') return productos.filter(p=>normal(p.codigo)===normal(q));
-  const nq=normal(q);
+  const nq=normal(q).replace(/\bduque\b/g,'duke');
   return productos.filter(p=>{
     const okCat=Boolean(q)||!categoriaActual||p.categoria===categoriaActual;
     const okSub=Boolean(q)||!subActual||p.subcategoria===subActual;
@@ -3150,6 +3150,21 @@ function renderVistaTanquesWaterplast(lista){
 }
 /* FIN_VISTA_TANQUES_WATERPLAST_AGRUPADOS_2026_09_07 */
 
+function medidaResultado(p){
+  let medida;
+  switch(p.categoria){
+    case 'Latyn Fusión': medida=medidaLatyn(p,p.subcategoria); break;
+    case 'PP': medida=ppMedida(p,ppGrupo(p)); break;
+    case 'Epoxi': medida=epoxiMedida(p,epoxiGrupo(p)); break;
+    case 'Sigas': medida=sigasMedida(p,sigasGrupo(p)); break;
+    case 'Galvanizado': medida=galvanizadoMedida(p,galvanizadoGrupo(p)); break;
+    case 'Flexibles': medida=flexibleMedida(p,p.subcategoria); break;
+    case 'Espigas': medida=espigaMedida(p,espigaGrupo(p)); break;
+  }
+  const valor=String(medida||p.medida||'').trim();
+  return valor && ![p.descripcion,p.subcategoria].some(texto=>normal(texto||'')===normal(valor)) ? valor : '';
+}
+
 function renderProductos(){
   const q=document.getElementById('q').value.trim();
   document.getElementById('totalChip').textContent=productos.length+' productos cargados';
@@ -3269,7 +3284,7 @@ function renderProductos(){
   if(categoriaActual==='Calefones y accesorios' && !q){ cont.innerHTML=renderVistaFamiliasBano(lista,'Calefones y accesorios'); return; }
   const exactos=detectarDestino(q)?.tipo==='codigo';
   const mostrar=(exactos?lista:lista.slice(0,300));
-  cont.innerHTML=mostrar.map(p=>{const galeria=fotosProducto(p);const foto=galeria[0];return `<article class="prod panel"><div class="img">${foto ? `<img src="${escHtml(foto)}" alt="${escHtml(p.descripcion)}"${dataGaleriaAttr(galeria)} onerror="this.parentElement.innerHTML='<div class=&quot;imgFallback&quot;>${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>'">` : `<div class="imgFallback">${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>`}</div><div class="code">Código ${escHtml(p.codigo)}${precioHtml(p)} · Página ${escHtml(p.pagina)}</div><div class="name">${escHtml(p.descripcion)}</div><div class="meta">${escHtml(p.subcategoria)}</div><div class="stepper" style="justify-content:flex-start;margin-top:auto"><button onclick="ajustarCantidad(${p.id},-1)">−</button><input data-cant-id="${p.id}" type="number" min="0" step="1" value="${cantidadEnPedido(p.id)}" oninput="setCantidadManual(${p.id},this.value)" onclick="this.select()"><button onclick="ajustarCantidad(${p.id},1)">+</button></div></article>`}).join('')+(lista.length>300&&!exactos?`<p class="empty">Mostrando 300 de ${lista.length} productos. Usá el buscador para afinar.</p>`:'');
+  cont.innerHTML=mostrar.map(p=>{const galeria=fotosProducto(p);const foto=galeria[0];const medida=modoBusqueda?medidaResultado(p):'';return `<article class="prod panel"><div class="img">${foto ? `<img src="${escHtml(foto)}" alt="${escHtml(p.descripcion)}"${dataGaleriaAttr(galeria)} onerror="this.parentElement.innerHTML='<div class=&quot;imgFallback&quot;>${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>'">` : `<div class="imgFallback">${escHtml(p.categoria)}<br><small>${escHtml(p.subcategoria)}</small></div>`}</div><div class="code">Código ${escHtml(p.codigo)}${precioHtml(p)} · Página ${escHtml(p.pagina)}</div><div class="name">${escHtml(p.descripcion)}</div><div class="meta">${escHtml(p.subcategoria)}</div>${medida?`<div class="meta">Medida: ${escHtml(medida)}</div>`: ''}<div class="stepper" style="justify-content:flex-start;margin-top:auto"><button onclick="ajustarCantidad(${p.id},-1)">−</button><input data-cant-id="${p.id}" type="number" min="0" step="1" value="${cantidadEnPedido(p.id)}" oninput="setCantidadManual(${p.id},this.value)" onclick="this.select()"><button onclick="ajustarCantidad(${p.id},1)">+</button></div></article>`}).join('')+(lista.length>300&&!exactos?`<p class="empty">Mostrando 300 de ${lista.length} productos. Usá el buscador para afinar.</p>`:'');
 }
 let temporizadorBusqueda;
 function programarBusqueda(){
