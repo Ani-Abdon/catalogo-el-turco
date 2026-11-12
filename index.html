@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="utf-8">
-<meta name="catalogo-version" content="20261112-catalogo-todos">
+<meta name="catalogo-version" content="20261112-catalogo-novedades">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Distribuidora El Turco - Catálogo 02/11/2026</title>
@@ -291,6 +291,12 @@ body{background:#f6f8fb}
 <div class="layout">
   <aside class="sidebar panel"><h3>Categorías</h3><div id="menu"></div></aside>
   <main class="main">
+    <style>#novedadesCatalogo [hidden]{display:none!important}</style>
+    <details id="novedadesCatalogo" class="panel" style="margin-bottom:16px;padding:14px 18px" open>
+      <summary style="cursor:pointer;font-weight:800">🔔 Novedades del catálogo</summary>
+      <div id="listaNovedades" style="display:grid;gap:8px;margin-top:10px"></div>
+    </details>
+
     <section id="inicioCatalogo" class="hero panel"><h1 id="titulo">Catálogo</h1><p id="subtitulo">Elegí una categoría o usá el buscador para encontrar productos.</p><div class="summary"><button type="button" class="cartTop" onclick="verTodosLosProductos()">Ver todos los productos</button></div></section>
     <section id="elegiCategoria" class="homeCats panel"><h2>Elegí una categoría</h2><div class="catGrid" id="catCards"></div></section>
     <section id="novedadesAviso" class="novedadesAviso"><div><b>🆕 Hay productos nuevos</b><small id="novedadesTexto"></small></div><button onclick="marcarNovedadesVistas()">Ya los vi</button></section>
@@ -3468,7 +3474,7 @@ function lineas(){
     'Fecha: '+fecha+'\n\n'+filas+
     (obs?'\n\nObservaciones:\n'+obs:'');
 }
-const VERSION_CATALOGO='20261112-catalogo-todos';
+const VERSION_CATALOGO='20261112-catalogo-novedades';
 async function comprobarVersionPedido(){
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),15000);
@@ -4363,5 +4369,73 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
 
 <script src="login-config.js"></script>
 <script src="login.js"></script>
+<script>
+(() => {
+  const novedades = [
+    {id: '20261112-CSS300', codigo: 'CSS300', estado: 'Nuevo ingreso'},
+    {id: '20261112-CSS500', codigo: 'CSS500', estado: 'Nuevo ingreso'},
+    {id: '20261112-TH500', codigo: 'TH500', estado: 'Nuevo ingreso'}
+  ];
+  const panel = document.getElementById('novedadesCatalogo');
+  const lista = document.getElementById('listaNovedades');
+  const plazo = 24 * 60 * 60 * 1000;
+  const vistos = new Map();
+  let temporizador;
+  for (const {id, codigo, estado} of novedades) {
+    const clave = 'elTurcoNovedadVista:' + id;
+    try {
+      const fecha = Number(localStorage.getItem(clave));
+      if (fecha > 0) vistos.set(id, fecha);
+    } catch (_) {}
+
+    const producto = productos.find(p => String(p.codigo) === codigo);
+    if (!producto) continue;
+    const aviso = document.createElement('button');
+    aviso.dataset.novedad = id;
+    aviso.type = 'button';
+    aviso.className = 'catCard';
+    aviso.style.cssText = 'width:100%;text-align:left;justify-content:space-between';
+    const texto = document.createElement('span');
+    texto.textContent = estado + ' · ' + producto.descripcion + ' · ' + codigo;
+    const flecha = document.createElement('span');
+    flecha.textContent = 'Ver producto →';
+    aviso.append(texto, flecha);
+    aviso.addEventListener('click', () => {
+      if (!vistos.has(id)) {
+        const fecha = Date.now();
+        vistos.set(id, fecha);
+        try { localStorage.setItem(clave, String(fecha)); } catch (_) {}
+      }
+      actualizarAvisos();
+      panel.open = false;
+      document.getElementById('q').value = codigo;
+      buscar();
+      scrollToProductos();
+    });
+    lista.append(aviso);
+  }
+  function actualizarAvisos() {
+    clearTimeout(temporizador);
+    const ahora = Date.now();
+    let siguiente = Infinity;
+    let cantidad = 0;
+    for (const aviso of lista.children) {
+      const fecha = vistos.get(aviso.dataset.novedad);
+      const vence = fecha === undefined ? Infinity : fecha + plazo;
+      aviso.hidden = vence <= ahora;
+      if (!aviso.hidden) {
+        cantidad++;
+        siguiente = Math.min(siguiente, vence);
+      }
+    }
+    panel.hidden = cantidad === 0;
+    panel.querySelector('summary').textContent = '🔔 Novedades del catálogo · ' + cantidad;
+    if (Number.isFinite(siguiente)) {
+      temporizador = setTimeout(actualizarAvisos, siguiente - ahora);
+    }
+  }
+  actualizarAvisos();
+})();
+</script>
 </body>
 </html>
