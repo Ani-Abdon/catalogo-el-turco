@@ -1843,7 +1843,11 @@ const CATEGORIAS_HABILITADAS = new Set([
   ,'Griferías Hydros y Piazza'
 ]);
 for (let i = productos.length - 1; i >= 0; i--) {
-  if (!CATEGORIAS_HABILITADAS.has(productos[i].categoria)) {
+  const producto = productos[i];
+  if (producto.codigo === '3276' && producto.categoria === 'Artículos plásticos Duke y Malvar') {
+    producto.categoria = 'Reguladores de gas y accesorios';
+    producto.subcategoria = 'Punteras de goma';
+  } else if (!CATEGORIAS_HABILITADAS.has(producto.categoria)) {
     productos.splice(i, 1);
   }
 }
