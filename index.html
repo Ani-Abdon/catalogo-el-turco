@@ -1944,7 +1944,311 @@ function jsArg(s){return JSON.stringify(String(s));}
 function fotosProducto(p){const directas=(Array.isArray(p?.fotos)&&p.fotos.length?p.fotos:(p?.foto?[p.foto]:[])).filter(Boolean);if(directas.length)return directas;const familiar=p?.categoria==='Adhesivos varios'?galiFotos[p.subcategoria]:null;return familiar?[familiar]:[];}
 function galeriaItems(items){return [...new Set(items.flatMap(item=>fotosProducto(item)))];}
 function dataGaleriaAttr(fotos){return fotos&&fotos.length>1?` data-gallery="${escHtml(JSON.stringify(fotos))}"`:'';}
+const EMOJIS_CATEGORIA=new Map([
+  [
+    "Accesorios para lavatorio",
+    "🚰"
+  ],
+  [
+    "Canillas y válvulas metálicas",
+    "🚰"
+  ],
+  [
+    "Canillas y válvulas plásticas",
+    "🚰"
+  ],
+  [
+    "Campanas, volantes y repuestos para griferías",
+    "🚰"
+  ],
+  [
+    "Mezcladores y cortachorros para canillas Malvar",
+    "🚰"
+  ],
+  [
+    "Griferias Aqualaf",
+    "🚰"
+  ],
+  [
+    "Griferías Hydros y Piazza",
+    "🚰"
+  ],
+  [
+    "Griferías plásticas",
+    "🚰"
+  ],
+  [
+    "MONOCOMANDOS GOURMET PIAZZA",
+    "🚰"
+  ],
+  [
+    "Accesorios para mochila Andina",
+    "🚽"
+  ],
+  [
+    "Accesorios para mochila Capea",
+    "🚽"
+  ],
+  [
+    "Accesorios para mochila Ferrum",
+    "🚽"
+  ],
+  [
+    "Accesorios para mochila Verona y Dórica",
+    "🚽"
+  ],
+  [
+    "Aro para base inodoro y accesorios de goma",
+    "🚽"
+  ],
+  [
+    "Asiento de madera MDF y accesorios",
+    "🚽"
+  ],
+  [
+    "Depósito, asientos y accesorios MONKOTO",
+    "🚽"
+  ],
+  [
+    "Descargas y repuestos para inodoros",
+    "🚽"
+  ],
+  [
+    "Fuelles y Flappers",
+    "🚽"
+  ],
+  [
+    "Gomas para mochila y bidet",
+    "🚽"
+  ],
+  [
+    "Mochila y accesorios TOPACIO",
+    "🚽"
+  ],
+  [
+    "Mochilas plásticas Dealer",
+    "🚽"
+  ],
+  [
+    "Mochilas y asientos plásticos Baco",
+    "🚽"
+  ],
+  [
+    "Repuestos para deposito mochila",
+    "🚽"
+  ],
+  [
+    "SANITARIOS DE LOZA PIAZZA",
+    "🚽"
+  ],
+  [
+    "Válvulas de admisión y repuestos para depósitos y mochilas",
+    "🚽"
+  ],
+  [
+    "Válvulas y descargas EGEO",
+    "🚽"
+  ],
+  [
+    "Lluvias para bidet y accesorios",
+    "🚿"
+  ],
+  [
+    "LLUVIAS Y BRAZOS CROMADOS",
+    "🚿"
+  ],
+  [
+    "MOZART DUCHAS Y ACCESORIOS",
+    "🚿"
+  ],
+  [
+    "Linea practica para baño",
+    "🛁"
+  ],
+  [
+    "Filtros para lavatorio y cocina",
+    "🫧"
+  ],
+  [
+    "Bombas",
+    "💧"
+  ],
+  [
+    "Boyas de descarga y repuestos para deposito y mochila",
+    "💧"
+  ],
+  [
+    "Boyas plasticas para flotante",
+    "💧"
+  ],
+  [
+    "Boyas y flotantes para tanque y deposito",
+    "💧"
+  ],
+  [
+    "Tanques Waterplast",
+    "🛢️"
+  ],
+  [
+    "Acoples rápidos",
+    "🔗"
+  ],
+  [
+    "Amanco PVC nivel 1",
+    "🔗"
+  ],
+  [
+    "Amanco Silentium",
+    "🔗"
+  ],
+  [
+    "Conexiones de redes",
+    "🔗"
+  ],
+  [
+    "Duragro",
+    "🔗"
+  ],
+  [
+    "Duratop",
+    "🔗"
+  ],
+  [
+    "Espigas",
+    "🔗"
+  ],
+  [
+    "Latyn Fusión",
+    "🔗"
+  ],
+  [
+    "PP",
+    "🔗"
+  ],
+  [
+    "Tubo de polietileno y accesorios",
+    "🔗"
+  ],
+  [
+    "CONEXIONES CORRUGADAS FLEXIBLES",
+    "➰"
+  ],
+  [
+    "Flexibles",
+    "➰"
+  ],
+  [
+    "Mangas y conexiones para canillas",
+    "➰"
+  ],
+  [
+    "MANGUERAS PARA LAVARROPAS",
+    "➰"
+  ],
+  [
+    "Cabezales/Vástagos",
+    "🔩"
+  ],
+  [
+    "Galvanizado",
+    "🔩"
+  ],
+  [
+    "Grampas omegas para agua",
+    "🔩"
+  ],
+  [
+    "Prolongacion trafilada cromada",
+    "🔩"
+  ],
+  [
+    "Tornillos",
+    "🔩"
+  ],
+  [
+    "Valvulas y repuestos",
+    "🔩"
+  ],
+  [
+    "VALVULAS DE RETENCION, ESFERICAS Y CANILLAS PLASTICAS DUKE",
+    "🔩"
+  ],
+  [
+    "Broncería",
+    "🟤"
+  ],
+  [
+    "Brazos de bronce y balancines para flotantes",
+    "🟤"
+  ],
+  [
+    "Brogas",
+    "🔥"
+  ],
+  [
+    "Calefones y accesorios",
+    "🔥"
+  ],
+  [
+    "Sigas",
+    "🔥"
+  ],
+  [
+    "TERMOCUPLAS Y ACCESORIOS",
+    "🔥"
+  ],
+  [
+    "Desagües y accesorios sanitarios",
+    "🕳️"
+  ],
+  [
+    "Sifones y accesorios para pileta",
+    "🕳️"
+  ],
+  [
+    "Tapas y sobretapas de inspección",
+    "🕳️"
+  ],
+  [
+    "Rejillas de ventilación y tapas",
+    "🌬️"
+  ],
+  [
+    "Ventosa destapa cañerías malvar",
+    "🌬️"
+  ],
+  [
+    "Sopapas",
+    "🪠"
+  ],
+  [
+    "Rollos pileteros",
+    "🏊"
+  ],
+  [
+    "Albañilería",
+    "🧱"
+  ],
+  [
+    "Adhesivos varios",
+    "🧴"
+  ],
+  [
+    "Epoxi",
+    "🧴"
+  ],
+  [
+    "Artículos de jardin",
+    "🌿"
+  ],
+  [
+    "Artículos varios \"Malvar\"",
+    "🧰"
+  ]
+]);
 function iconoCategoria(cat){
+  const emoji=EMOJIS_CATEGORIA.get(cat);
+  if(emoji) return emoji;
   const n=normal(cat);
   if(n.includes('termocuplas y accesorios')) return '🌡️';
   if(n.includes('jardin')) return '🌿';
