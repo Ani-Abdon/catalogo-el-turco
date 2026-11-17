@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="utf-8">
-<meta name="catalogo-version" content="20261112-catalogo-novedades">
+<meta name="catalogo-version" content="20261117-novedades-desde-ingreso">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Distribuidora El Turco - Catálogo 02/11/2026</title>
@@ -3871,7 +3871,7 @@ function lineas(){
     'Fecha: '+fecha+'\n\n'+filas+
     (obs?'\n\nObservaciones:\n'+obs:'');
 }
-const VERSION_CATALOGO='20261112-catalogo-novedades';
+const VERSION_CATALOGO='20261117-novedades-desde-ingreso';
 async function comprobarVersionPedido(){
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),15000);
@@ -4776,15 +4776,9 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
   const panel = document.getElementById('novedadesCatalogo');
   const lista = document.getElementById('listaNovedades');
   const plazo = 24 * 60 * 60 * 1000;
-  const vistos = new Map();
+  const primerasEntradas = new Map();
   let temporizador;
   for (const {id, codigo, estado} of novedades) {
-    const clave = 'elTurcoNovedadVista:' + id;
-    try {
-      const fecha = Number(localStorage.getItem(clave));
-      if (fecha > 0) vistos.set(id, fecha);
-    } catch (_) {}
-
     const producto = productos.find(p => String(p.codigo) === codigo);
     if (!producto) continue;
     const aviso = document.createElement('button');
@@ -4798,12 +4792,6 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
     flecha.textContent = 'Ver producto →';
     aviso.append(texto, flecha);
     aviso.addEventListener('click', () => {
-      if (!vistos.has(id)) {
-        const fecha = Date.now();
-        vistos.set(id, fecha);
-        try { localStorage.setItem(clave, String(fecha)); } catch (_) {}
-      }
-      actualizarAvisos();
       panel.open = false;
       document.getElementById('q').value = codigo;
       buscar();
@@ -4817,7 +4805,7 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
     let siguiente = Infinity;
     let cantidad = 0;
     for (const aviso of lista.children) {
-      const fecha = vistos.get(aviso.dataset.novedad);
+      const fecha = primerasEntradas.get(aviso.dataset.novedad);
       const vence = fecha === undefined ? Infinity : fecha + plazo;
       aviso.hidden = vence <= ahora;
       if (!aviso.hidden) {
@@ -4831,7 +4819,36 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
       temporizador = setTimeout(actualizarAvisos, siguiente - ahora);
     }
   }
-  actualizarAvisos();
+  function registrarEntrada() {
+    const ahora = Date.now();
+    for (const aviso of lista.children) {
+      const id = aviso.dataset.novedad;
+      const clave = 'elTurcoNovedadEntrada:' + id;
+      let fecha = ahora;
+      try {
+        const guardada = Number(localStorage.getItem(clave));
+        const anterior = Number(localStorage.getItem('elTurcoNovedadVista:' + id));
+        if (guardada > 0) fecha = guardada;
+        else {
+          if (anterior > 0) fecha = anterior;
+          localStorage.setItem(clave, String(fecha));
+        }
+      } catch (_) {}
+      primerasEntradas.set(id, fecha);
+    }
+    actualizarAvisos();
+  }
+
+  if (document.body.classList.contains('acceso-pendiente')) {
+    const acceso = new MutationObserver(() => {
+      if (document.body.classList.contains('acceso-pendiente')) return;
+      acceso.disconnect();
+      registrarEntrada();
+    });
+    acceso.observe(document.body, {attributes: true, attributeFilter: ['class']});
+  } else {
+    registrarEntrada();
+  }
 })();
 </script>
 </body>
