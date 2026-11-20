@@ -361,7 +361,8 @@ const FOTOS_NOVIEMBRE_12={"PS":"data:image/webp;base64,UklGRqAgAABXRUJQVlA4IJQgA
  for(const [codigo,nombre,medida,f] of specs){
   const producto=productos.find(p=>String(p.codigo).trim()===codigo);
   if(!producto)throw new Error('Falta el producto '+codigo);
-  Object.assign(producto,{categoria,subcategoria:nombre,descripcion:nombre,medida,foto:fotos[f],fotos:[fotos[f]]});
+  const foto=codigo==="848"?"imagenes/conexiones-corrugadas/848.png":fotos[f];
+  Object.assign(producto,{categoria,subcategoria:nombre,descripcion:nombre,medida,foto,fotos:[foto]});
  }
  const renderAnterior=renderProductos;
  renderProductos=function(){
