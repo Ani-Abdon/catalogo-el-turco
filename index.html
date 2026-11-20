@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="utf-8">
-<meta name="catalogo-version" content="20261118-sanitarios-loza">
+<meta name="catalogo-version" content="20261120-reingreso-calefon">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Distribuidora El Turco - Catálogo 02/11/2026</title>
@@ -315,7 +315,7 @@ const FOTOS_NOVIEMBRE_12={"PS":"data:image/webp;base64,UklGRqAgAABXRUJQVlA4IJQgA
         <button type="button" class="clearSearch" id="limpiarBusqueda" aria-label="Limpiar búsqueda">×</button>
       </div>
     </div>
-    <div class="tip">Catálogo con precios · Lista verificada al 11/11/2026 · Tip: buscá por código exacto, producto, categoría, subcategoría o “página 7”.</div>
+    <div class="tip">Catálogo con precios · Lista de precios actualizada al 18/11/2026 · Tip: buscá por código exacto, producto, categoría, subcategoría o “página 7”.</div>
   </div>
 </header>
 <div class="layout">
@@ -1004,6 +1004,7 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
 <script>
 (() => {
   const novedades = [
+    {id: '20261120-CA1', codigo: 'CA1', estado: 'Reingreso', titulo: 'Calefón eléctrico de 20 litros'},
     {id: '20261112-CSS300', codigo: 'CSS300', estado: 'Nuevo ingreso'},
     {id: '20261112-CSS500', codigo: 'CSS500', estado: 'Nuevo ingreso'},
     {id: '20261112-TH500', codigo: 'TH500', estado: 'Nuevo ingreso'}
@@ -1013,7 +1014,7 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
   const plazo = 24 * 60 * 60 * 1000;
   const primerasEntradas = new Map();
   let temporizador;
-  for (const {id, codigo, estado} of novedades) {
+  for (const {id, codigo, estado, titulo} of novedades) {
     const producto = productos.find(p => String(p.codigo) === codigo);
     if (!producto) continue;
     const aviso = document.createElement('button');
@@ -1022,7 +1023,7 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
     aviso.className = 'catCard';
     aviso.style.cssText = 'width:100%;text-align:left;justify-content:space-between';
     const texto = document.createElement('span');
-    texto.textContent = estado + ' · ' + producto.descripcion + ' · ' + codigo;
+    texto.textContent = estado + ' · ' + (titulo || producto.descripcion + ' · ' + codigo);
     const flecha = document.createElement('span');
     flecha.textContent = 'Ver producto →';
     aviso.append(texto, flecha);
