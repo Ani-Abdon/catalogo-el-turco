@@ -309,7 +309,7 @@ const FOTOS_NOVIEMBRE_12={"PS":"data:image/webp;base64,UklGRqAgAABXRUJQVlA4IJQgA
     <button class="cartTop" onclick="abrirCarrito()">🛒 Ver carrito (<span id="countTop">0</span>)</button>
     <div class="brand">Distribuidora El Turco<small>Osvaldo Abdon e hijos</small></div>
     <div class="search">
-      <button type="button" class="homeButton" id="inicioCatalogo"><span aria-hidden="true">⌂</span> Inicio</button>
+      <button type="button" class="homeButton" id="botonInicioCatalogo"><span aria-hidden="true">⌂</span> Inicio</button>
       <div class="searchField">
         <input id="q" aria-label="Buscar en el catálogo" placeholder="Buscar por código, producto, categoría o página..." onkeydown="if(event.key==='Enter'&&!event.isComposing) buscar()">
         <button type="button" class="clearSearch" id="limpiarBusqueda" aria-label="Limpiar búsqueda">×</button>
@@ -1108,7 +1108,7 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
     buscar();
     buscador.focus({preventScroll: true});
   });
-  document.getElementById('inicioCatalogo').addEventListener('click', () => {
+  document.getElementById('botonInicioCatalogo').addEventListener('click', () => {
     categoriaAntesDeBuscar = undefined;
     categoriaAbierta = '';
     limpiar();
