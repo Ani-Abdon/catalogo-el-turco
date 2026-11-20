@@ -229,6 +229,22 @@ body{background:#f6f8fb}
  .search{grid-column:1/-1;max-width:none}
  .pp-families{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))!important}
 }
+/* Navegación del encabezado */
+header .top{grid-template-columns:minmax(0,1fr) auto;gap:10px 14px}
+header .brand{grid-column:1/-1;grid-row:1}
+header .cartTop{grid-column:2;grid-row:2;justify-self:end}
+header .search{grid-column:1;grid-row:2;max-width:none}
+.searchField{position:relative;flex:1;min-width:0}
+.searchField input{padding-right:48px}
+.search .homeButton{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;background:transparent;color:#fff;border:1px solid #fff}
+.homeButton:hover{background:rgba(255,255,255,.15)}
+.search .clearSearch{position:absolute;top:0;right:0;height:100%;width:44px;padding:0;background:transparent;color:#475569;font-size:23px}
+.searchField input:placeholder-shown + .clearSearch{visibility:hidden}
+@media(max-width:560px){
+ header .search{grid-column:1/-1}
+ header .cartTop{grid-column:1/-1;grid-row:3;justify-self:center}
+}
+
 </style>
 
 <script>const TURCO_IMG=[];
@@ -292,7 +308,13 @@ const FOTOS_NOVIEMBRE_12={"PS":"data:image/webp;base64,UklGRqAgAABXRUJQVlA4IJQgA
   <div class="top">
     <button class="cartTop" onclick="abrirCarrito()">🛒 Ver carrito (<span id="countTop">0</span>)</button>
     <div class="brand">Distribuidora El Turco<small>Osvaldo Abdon e hijos</small></div>
-    <div class="search"><input id="q" placeholder="Buscar por código, producto, categoría o página..." oninput="programarBusqueda()" onkeydown="if(event.key==='Enter'&&!event.isComposing) buscar()"><button onclick="limpiar()">Limpiar</button></div>
+    <div class="search">
+      <button type="button" class="homeButton" id="inicioCatalogo"><span aria-hidden="true">⌂</span> Inicio</button>
+      <div class="searchField">
+        <input id="q" aria-label="Buscar en el catálogo" placeholder="Buscar por código, producto, categoría o página..." onkeydown="if(event.key==='Enter'&&!event.isComposing) buscar()">
+        <button type="button" class="clearSearch" id="limpiarBusqueda" aria-label="Limpiar búsqueda">×</button>
+      </div>
+    </div>
     <div class="tip">Catálogo con precios · Lista verificada al 11/11/2026 · Tip: buscá por código exacto, producto, categoría, subcategoría o “página 7”.</div>
   </div>
 </header>
@@ -1062,6 +1084,39 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
   } else {
     registrarEntrada();
   }
+})();
+</script>
+<script>
+(() => {
+  const buscador = document.getElementById('q');
+  let categoriaAntesDeBuscar;
+  buscador.addEventListener('input', () => {
+    if (buscador.value) {
+      categoriaAntesDeBuscar ??= {categoria: categoriaActual, subcategoria: subActual, abierta: categoriaAbierta};
+    }
+    programarBusqueda();
+  });
+  document.getElementById('limpiarBusqueda').addEventListener('click', () => {
+    buscador.value = '';
+    if (categoriaAntesDeBuscar) {
+      categoriaActual = categoriaAntesDeBuscar.categoria;
+      subActual = categoriaAntesDeBuscar.subcategoria;
+      categoriaAbierta = categoriaAntesDeBuscar.abierta;
+      saveState();
+      categoriaAntesDeBuscar = undefined;
+    }
+    buscar();
+    buscador.focus({preventScroll: true});
+  });
+  document.getElementById('inicioCatalogo').addEventListener('click', () => {
+    categoriaAntesDeBuscar = undefined;
+    categoriaAbierta = '';
+    limpiar();
+    saveState();
+    document.querySelector('.main').scrollTo(0, 0);
+    document.querySelector('.sidebar').scrollTo(0, 0);
+    window.scrollTo(0, 0);
+  });
 })();
 </script>
 </body>
