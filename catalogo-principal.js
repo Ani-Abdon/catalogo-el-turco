@@ -3536,7 +3536,7 @@ function lineas(){
     'Fecha: '+fecha+'\n\n'+filas+
     (obs?'\n\nObservaciones:\n'+obs:'');
 }
-const VERSION_CATALOGO='20261118-sanitarios-loza';
+const VERSION_CATALOGO=document.querySelector('meta[name="catalogo-version"]').content;
 async function comprobarVersionPedido(){
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),15000);
