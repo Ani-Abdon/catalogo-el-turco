@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="utf-8">
-<meta name="catalogo-version" content="20261125-tee-silentium">
+<meta name="catalogo-version" content="20261126-mochila-precios">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Distribuidora El Turco - Catálogo 02/11/2026</title>
@@ -315,7 +315,7 @@ const FOTOS_NOVIEMBRE_12={"PS":"data:image/webp;base64,UklGRqAgAABXRUJQVlA4IJQgA
         <button type="button" class="clearSearch" id="limpiarBusqueda" aria-label="Limpiar búsqueda">×</button>
       </div>
     </div>
-    <div class="tip">Catálogo con precios · Lista de precios actualizada al 18/11/2026 · Tip: buscá por código exacto, producto, categoría, subcategoría o “página 7”.</div>
+    <div class="tip">Catálogo con precios · Lista de precios actualizada al 26/11/2026 · Tip: buscá por código exacto, producto, categoría, subcategoría o “página 7”.</div>
   </div>
 </header>
 <div class="layout">
@@ -999,11 +999,29 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
 </script>
 
 
+<script>
+(() => {
+  const foto = 'imagenes/mochila-plastica-470320.webp';
+  const categoria = 'Mochila plástica simil loza';
+  productos.push({
+    id: Math.max(0, ...productos.map(p => Number(p.id) || 0)) + 1,
+    codigo: '470320',
+    descripcion: 'Mochila plástica con botón dual',
+    categoria,
+    subcategoria: 'Mochilas con botón dual',
+    foto,
+    fotos: [foto],
+    origen: 'EL TURCO 26-11-2026'
+  });
+  miniaturasCategoria.set(categoria, foto);
+})();
+</script>
 <script src="login-config.js"></script>
 <script src="login.js"></script>
 <script>
 (() => {
   const novedades = [
+    {id: '20261126-470320', codigo: '470320', estado: 'Nuevo ingreso', titulo: 'Mochila plástica con botón dual'},
     {id: '20261120-CA1', codigo: 'CA1', estado: 'Reingreso', titulo: 'Calefón eléctrico de 20 litros'},
     {id: '20261112-CSS300', codigo: 'CSS300', estado: 'Nuevo ingreso'},
     {id: '20261112-CSS500', codigo: 'CSS500', estado: 'Nuevo ingreso'},
@@ -1133,6 +1151,24 @@ const anterior=renderProductos;renderProductos=function(){anterior();if(categori
    return Object.hasOwn(verificados,codigo)?verificados[codigo]:anterior(p);
  };
  renderProductos();renderCarrito();
+})();
+</script>
+
+<script>
+(() => {
+  const precios26Noviembre = {"064": 1856.78, "065": 1906.77, "066": 2124.35, "067": 2408.19, "101": 2848.09, "102": 3517.6, "21102": 5131.61, "21103": 6350.36, "21104": 13254.14, "21105": 14681.27, "21106": 20395.51, "21120": 3084.35, "21121": 3863.54, "21122": 5830.41, "21123": 13407.7, "21124": 17038.88, "21125": 21613.6, "21200": 2593.5, "21201": 3390.52, "230M": 489.13, "280": 5756.99, "280D": 5031.11, "286": 16980.31, "288": 31444.88, "328": 3356.6, "329": 5038.56, "4065": 47057.4, "4085": 73865.99, "470320": 71526.1, "844": 1452.92, "845": 1713.03, "CDW": 106214.87, "CSS300": 165466.77, "CSS500": 203801.48, "SPO300": 183278.1, "SPO500": 242790.65, "SPO750": 301242.18, "TH500": 401075.94, "TS1000": 250480.57, "TS300": 122365.1, "TS500": 178426.63, "TS750": 222360.48, "TTR": 18735.91};
+  const precioAnterior = precioValor;
+  Object.assign(PRECIOS_CATALOGO, precios26Noviembre);
+  precioValor = function (producto) {
+    const codigo = String(typeof producto === 'object' && producto ? producto.codigo : producto)
+      .trim().toUpperCase().replace(/\s+/g, '');
+    return Object.hasOwn(precios26Noviembre, codigo)
+      ? precios26Noviembre[codigo]
+      : precioAnterior(producto);
+  };
+  renderMenu();
+  renderProductos();
+  renderCarrito();
 })();
 </script>
 </body>
